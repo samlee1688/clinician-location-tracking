@@ -6,14 +6,13 @@ import schedule
 
 url=  "https://3qbqr98twd.execute-api.us-west-2.amazonaws.com/test/clinicianstatus/"
 SENDER_EMAIL = "sammielee1688@gmail.com"
-SENDER_APP_ID = ""  # paste here
-RECIPIENT_EMAIL = "sprinter-eng-test@guerrillamail.info"
+SENDER_APP_ID = "" # paste here
+RECIPIENT_EMAIL = "coding-challenges+alerts@sprinterhealth.com"
 
 
 def getStatus():
+    print("run")
     for i in range(1,7):    # iterates through phlebotomists 1-6 (valid cases). Change loop to "for i in range(1,8):" for phlebotomist 7 (always out of range).
-        #print(i)
-
         response = requests.get(url+str(i))
         if response.status_code != 200:
             print("API Error: ", response.status_code)
@@ -29,8 +28,6 @@ def getStatus():
                 polygons.append(obj['geometry']['coordinates'][0])  # list of zones for a phlebotomist (id:3 has multiple)
             else:
                 print("unidentified type")        
-        #print(point)
-        #print(shapePoints)
 
         pointShapely = Point(point) # Converts all coordinates into Shapely objects
         polygonsShapely = []
@@ -56,6 +53,8 @@ def sendEmail(id: int):
 
         message = f"""
                     ALERT: Phlebotomist {id} is out of range!
+
+                    From: Samuel Lee (sammielee1688@gmail.com)
                     """
         server.sendmail(SENDER_EMAIL,RECIPIENT_EMAIL, message)
     except Exception as e:
